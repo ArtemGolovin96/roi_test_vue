@@ -30,7 +30,7 @@ export default {
     color: initial;
     display: inline-block;
     text-align: center;
-    margin: 10vh 0 0 0;
+    margin: 10vh 0 0 10vh;
     font: 400 11px system-ui;
     min-width: 100px;
     font-size: 1.5em;

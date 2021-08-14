@@ -1,6 +1,6 @@
 <template>
-<div class="empl-list-wrapper">
-    <table class="empl-list-wrapper__items" v-for="item in listOfEmployees" :key="item">
+<div class="empl-list-wrapper" v-if="listOfEmployees">
+    <table  class="empl-list-wrapper__items" v-for="item in listOfEmployees" :key="item">
     <caption>Список сотрудников</caption>
     <th>Имя сотрудника</th>
     <th>Телефонный номер</th>
@@ -8,6 +8,14 @@
         <td>{{item.name}}</td>
         <td>{{item.phoneNumber}}</td>
         </tr>
+    </table>
+</div>
+
+<div class="empl-list-wrapper" v-else>
+    <table  class="empl-list-wrapper__items">
+    <caption>Список сотрудников</caption>
+    <th>Имя сотрудника</th>
+    <th>Телефонный номер</th>
     </table>
 </div>
 </template>
@@ -19,11 +27,19 @@ export default {
   data() {
     return {
       tableName: 'Список сотрудников',
-      listOfEmployees: [
-        { id: null, name: 'Artem', phoneNumber: +79997148827, manager: null },
-      ],
+      listOfEmployees: null,
     };
   },
+
+  async mounted() {
+    if (!localStorage.listOfEmployees) {
+      console.log('ошибка');
+    }
+    const localListOfEmployees = await JSON.parse(localStorage.getItem('listOfEmployees'));
+    console.log(localListOfEmployees);
+    this.listOfEmployees = [...localListOfEmployees];
+  },
+
 };
 
 
@@ -38,8 +54,9 @@ table {
     background-color: #fff;
     color: black;
     border-radius: 15px;
-    margin: 10vh 0 0 -30vh;
+    margin: 10vh;
     border: 1px solid black;
+    padding: 3vh;
 }
 
 table thead tr {

@@ -3,6 +3,7 @@
     <add-button/>
     <div class="items">
     <empl-list/>
+    <add-form-employee/>
     </div>
   </div>
 </template>
@@ -10,6 +11,7 @@
 <script>
 import AddButton from './components/AddButton';
 import EmplList from './components/EmplList';
+import AddFormEmployee from './components/AddFormEmployee';
 
 
 export default {
@@ -17,6 +19,7 @@ export default {
   components: {
     AddButton,
     EmplList,
+    AddFormEmployee,
   },
 };
 </script>
@@ -35,4 +38,10 @@ body {
   flex-direction: column;
   height: 100vh;
   }
+
+
+.items {
+  display: flex;
+  flex-direction: row;
+}
 </style>
