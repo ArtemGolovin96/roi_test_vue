@@ -16,7 +16,7 @@
         >
         <select name="manager" v-model="selectedValueManager">
         <option value="" disabled selected hidden>Выбрать руководителя</option>
-            <option v-for="(item) in listOfEmployeesFromJson" :key="item.id">{{item.name}}</option>
+            <option v-for="(item, i) in listOfEmployeesFromJson" :key="i" v-bind:value="item.id">{{item.name}}</option>
             <option>Нет руководителя</option>
         </select>
         <button type="submit" class="form__save-button">Сохранить</button>
@@ -51,7 +51,8 @@ export default {
       this.listOfEmployeesFromJson = imutableistOfEmployeesFromJson;
     },
 
-    submit() {
+    submit(event) {
+      event.preventDefault();
       // Можно и инстансом класса
       const employeeItem = {
         id: Date.now(),
@@ -68,9 +69,9 @@ export default {
         localStorage.setItem('listOfEmployees', JSON.stringify(listOfEmployees));
         return;
       }
-
       this.listOfEmployeesFromJson.push(employeeItem);
       localStorage.setItem('listOfEmployees', JSON.stringify(this.listOfEmployeesFromJson));
+      console.log(this.selectedValueManager);
     },
 
 
