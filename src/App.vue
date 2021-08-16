@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <add-button/>
+    <add-button @click="openedAddWindow"/>
     <div class="items">
     <empl-list/>
-    <add-form-employee/>
+    <add-form-employee v-bind:opened="openAddWindow"/>
     </div>
   </div>
 </template>
@@ -20,6 +20,18 @@ export default {
     AddButton,
     EmplList,
     AddFormEmployee,
+  },
+  data() {
+    return {
+      openAddWindow: false,
+    };
+  },
+
+  methods: {
+    openedAddWindow(clicked) {
+      this.openAddWindow = clicked;
+      console.log();
+    },
   },
 };
 </script>

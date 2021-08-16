@@ -1,5 +1,5 @@
 <template>
-<div class="add-empl-form-wrapper">
+<div class="add-empl-form-wrapper" v-if="opened">
     <form action="submit" class="add-empl-form-wrapper__form" @submit="submit" id="form">
         <h3 class="form__h">Добавить пользователя</h3>
         <input
@@ -14,7 +14,11 @@
         placeholder="Phone number"
         v-model="phoneNumber"
         >
-        <select name="manager" v-if="props"></select>
+        <select name="manager" v-model="selectedValueManager">
+        <option value="" disabled selected hidden>Выбрать руководителя</option>
+            <option v-for="(item) in listOfEmployeesFromJson" :key="item.id">{{item.name}}</option>
+            <option>Нет руководителя</option>
+        </select>
         <button type="submit" class="form__save-button">Сохранить</button>
     </form>
 </div>
@@ -22,48 +26,58 @@
 
 <script>
 
-
 export default {
   name: 'addFormEmploee',
   data() {
     return {
       name: null,
       phoneNumber: '+7',
+      opened: false,
+      listOfEmployeesFromJson: [],
+      selectedValueManager: '',
     };
   },
 
+  mounted() {
+    this.getDataFromLocalStorage();
+  },
+
+
   methods: {
 
-    async getDataFromLocalStorage(employeeItem) {
+    async getDataFromLocalStorage() {
       const listOfEmployeesFromJson = await JSON.parse(localStorage.getItem('listOfEmployees'));
       const imutableistOfEmployeesFromJson = [...listOfEmployeesFromJson];
-      imutableistOfEmployeesFromJson.push(employeeItem);
-      localStorage.setItem('listOfEmployees', JSON.stringify(imutableistOfEmployeesFromJson));
-      console.log('imutable');
+      this.listOfEmployeesFromJson = imutableistOfEmployeesFromJson;
     },
-    submit(event) {
-      event.preventDefault();
+
+    submit() {
       // Можно и инстансом класса
       const employeeItem = {
         id: Date.now(),
         name: this.name,
         phoneNumber: this.phoneNumber,
-        manger: false,
+        manger: this.selectedValueManager,
         manageEmployee: null,
       };
+
 
       if (!localStorage.listOfEmployees) {
         const listOfEmployees = [];
         listOfEmployees.push(employeeItem);
         localStorage.setItem('listOfEmployees', JSON.stringify(listOfEmployees));
-        console.log(localStorage, '<---');
         return;
       }
 
-      this.getDataFromLocalStorage(employeeItem);
+      this.listOfEmployeesFromJson.push(employeeItem);
+      localStorage.setItem('listOfEmployees', JSON.stringify(this.listOfEmployeesFromJson));
     },
 
 
+  },
+
+  props: {
+    opened: [Boolean],
   },
 };
 

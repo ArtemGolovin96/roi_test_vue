@@ -1,10 +1,10 @@
 <template>
 <div class="empl-list-wrapper" v-if="listOfEmployees">
-    <table  class="empl-list-wrapper__items" v-for="item in listOfEmployees" :key="item">
+    <table  class="empl-list-wrapper__items">
     <caption>Список сотрудников</caption>
     <th>Имя сотрудника</th>
     <th>Телефонный номер</th>
-        <tr>
+        <tr v-for="(item, i) in listOfEmployees" :key="i">
         <td>{{item.name}}</td>
         <td>{{item.phoneNumber}}</td>
         </tr>
@@ -31,12 +31,10 @@ export default {
     };
   },
 
-  async mounted() {
-    if (!localStorage.listOfEmployees) {
-      console.log('ошибка');
-    }
-    const localListOfEmployees = await JSON.parse(localStorage.getItem('listOfEmployees'));
-    console.log(localListOfEmployees);
+
+  mounted() {
+    const localListOfEmployeesFirst = JSON.parse(localStorage.getItem('listOfEmployees'));
+    const localListOfEmployees = localListOfEmployeesFirst.map(el => el);
     this.listOfEmployees = [...localListOfEmployees];
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div class="add-button-wrapper">
-    <button class="add-button-wrapper__button">
+    <button class="add-button-wrapper__button" @click="click">
       <strong>{{innerText}}</strong>
     </button>
   </div>
@@ -11,9 +11,26 @@ export default {
   name: 'AddButton',
   data() {
     return {
-      innerText: 'Добавить',
+      innerText: 'Добавить в список',
+      clicked: false,
     };
   },
+
+  methods: {
+    click() {
+      // Я все понимаю, но тут я это сделал специально
+      if (!this.clicked) {
+        this.clicked = true;
+        this.$emit('click', this.clicked);
+        this.innerText = 'Скрыть поле добавления';
+      } else {
+        this.clicked = false;
+        this.$emit('click', this.clicked);
+        this.innerText = 'Добавить в список';
+      }
+    },
+  },
+
 };
 </script>
 
