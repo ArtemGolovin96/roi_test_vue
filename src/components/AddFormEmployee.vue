@@ -14,10 +14,14 @@
         placeholder="Phone number"
         v-model="phoneNumber"
         >
-        <select name="manager" v-model="selectedValueManager">
-        <option value="" disabled selected hidden>Выбрать руководителя</option>
-            <option v-for="(item, i) in listOfEmployeesFromJson" :key="i" v-bind:value="item.id">{{item.name}}</option>
-            <option>Нет руководителя</option>
+        <select name="manager" v-model="selectedValueManager" v-if="dataFromLocalStorage">
+        <option disabled selected hidden>Выбрать руководителя</option>
+            <option v-for="(item, i) in dataFromLocalStorage" :key="i"
+            v-bind:value="item.id"
+            >
+            {{item.name}}
+            </option>
+            <option value="00">Руководящий состав</option>
         </select>
         <button type="submit" class="form__save-button">Сохранить</button>
     </form>
@@ -35,6 +39,7 @@ export default {
       opened: false,
       listOfEmployeesFromJson: [],
       selectedValueManager: '',
+      dataFromLocalStorage: null,
     };
   },
 
@@ -47,31 +52,42 @@ export default {
 
     async getDataFromLocalStorage() {
       const listOfEmployeesFromJson = await JSON.parse(localStorage.getItem('listOfEmployees'));
-      const imutableistOfEmployeesFromJson = [...listOfEmployeesFromJson];
-      this.listOfEmployeesFromJson = imutableistOfEmployeesFromJson;
+      this.dataFromLocalStorage = [...listOfEmployeesFromJson];
     },
 
-    submit(event) {
-      event.preventDefault();
+    submit() {
       // Можно и инстансом класса
       const employeeItem = {
         id: Date.now(),
         name: this.name,
         phoneNumber: this.phoneNumber,
         manger: this.selectedValueManager,
-        manageEmployee: null,
+        manageEmployee: [],
       };
 
-
-      if (!localStorage.listOfEmployees) {
-        const listOfEmployees = [];
-        listOfEmployees.push(employeeItem);
-        localStorage.setItem('listOfEmployees', JSON.stringify(listOfEmployees));
-        return;
+      // из-за своей глупой ошибки, так нахардкодил, времени исправлять не было, простите
+      if (!this.dataFromLocalStorage) {
+        console.log('first');
+        this.listOfEmployeesFromJson.push(employeeItem);
+        localStorage.setItem('listOfEmployees', JSON.stringify(this.listOfEmployeesFromJson));
+      } else if (this.selectedValueManager === '00') {
+        console.log('Руководитель');
+        this.listOfEmployeesFromJson = [...this.dataFromLocalStorage];
+        this.listOfEmployeesFromJson.push(employeeItem);
+        localStorage.setItem('listOfEmployees', JSON.stringify(this.listOfEmployeesFromJson));
+      } else {
+        const generatedEmployeedList = this.dataFromLocalStorage.map((el) => {
+          if (el.id === this.selectedValueManager) {
+            el.manageEmployee.push(employeeItem);
+            return el;
+          // Знаю, что лучше делать по value, не получилось из-за disabled selected hidden(
+          } else if (this.selectedValueManager === '') {
+            alert('Статус сотрудника не определен');
+          }
+          return el;
+        });
+        localStorage.setItem('listOfEmployees', JSON.stringify(generatedEmployeedList));
       }
-      this.listOfEmployeesFromJson.push(employeeItem);
-      localStorage.setItem('listOfEmployees', JSON.stringify(this.listOfEmployeesFromJson));
-      console.log(this.selectedValueManager);
     },
 
 

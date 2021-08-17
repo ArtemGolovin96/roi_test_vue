@@ -28,6 +28,8 @@ export default {
         this.$emit('click', this.clicked);
         this.innerText = 'Добавить в список';
       }
+
+      console.log('clicked');
     },
   },
 
