@@ -112,6 +112,7 @@ export default {
     border: 1px solid black;
     padding: 3vh;
     min-height: 300px;
+    height: 400px;
 }
 
 input {
@@ -125,8 +126,8 @@ input {
 
 select {
     min-width: 150px;
-    margin: 3vh auto;
-    padding: 2vh;
+    margin: 1vh auto;
+    padding: 1vh;
     border-radius: 15px;
     outline: none;
 }

@@ -15,19 +15,18 @@
                 {{item.name}}
                 </td>
                 <td>{{item.phoneNumber}}</td>
-            <div class="substring-wrapper" v-if="item.manageEmployee.length > 0">
-            <div
+            <table class="substring-wrapper" v-if="item.manageEmployee.length > 0">
+            <caption
             role="button"
-            @click="clickManageEmploye"
             class="table__div-role-button"
             >
             <u>Подчиненные руководителя - {{item.name}}:</u> <span class="arrow">ᐁ</span>
-            </div>
+            </caption>
                 <div class="substring" v-for="(el, ind) in item.manageEmployee" v-bind:key="ind">
                     <td>{{el.name}}</td>
                     <td>{{el.phoneNumber}}</td>
                 </div>
-            </div>
+            </table>
             </tr>
         </table>
     </div>
@@ -49,6 +48,7 @@ export default {
     return {
       tableName: 'Список сотрудников',
       listOfEmployeesClient: null,
+      previoslistOfEmployeesClient: null,
     };
   },
 
@@ -56,13 +56,22 @@ export default {
   mounted() {
     const localListOfEmployeesFirst = JSON.parse(localStorage.getItem('listOfEmployees'));
     this.listOfEmployeesClient = [...localListOfEmployeesFirst];
+    this.previoslistOfEmployeesClient = [...localListOfEmployeesFirst];
   },
 
   methods: {
     clickOnSortButton() {
       const sortedlistOfEmployees = [...this.listOfEmployeesClient];
-      sortedlistOfEmployees.sort((a, b) => a.name.localeCompare(b.name));
-      this.listOfEmployeesClient = [...sortedlistOfEmployees];
+      console.log(sortedlistOfEmployees[0].name);
+      console.log(this.previoslistOfEmployeesClient[0].name);
+      if (sortedlistOfEmployees[0].name.localeCompare(this.previoslistOfEmployeesClient[0].name)) {
+        sortedlistOfEmployees.sort((a, b) => a.name.localeCompare(b.name));
+        this.listOfEmployeesClient = [...sortedlistOfEmployees];
+      } else if
+      (!sortedlistOfEmployees[0].name.localeCompare(this.previoslistOfEmployeesClient[0].name)) {
+        sortedlistOfEmployees.sort((a, b) => b.name.localeCompare(a.name));
+        this.listOfEmployeesClient = [...sortedlistOfEmployees];
+      }
     },
   },
 };
